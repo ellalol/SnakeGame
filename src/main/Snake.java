@@ -4,9 +4,12 @@ class Snake implements Runnable{
 	int x;
 	int y;
 	int direction;
+	boolean live;
 	
 	Snake(int x,int y,int direction){
-		
+		this.x=x;
+		this.y=y;
+		this.direction=direction;
 	}
 	
 	public void run() {
