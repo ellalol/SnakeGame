@@ -18,10 +18,14 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 	public void paint(Graphics g){//具体的画的方法
 		
 		g.fillRect(0, 0, 500, 400);	//画背景
-		g.setColor(Color.GREEN);   
-		g.fillRect(apple.getX(),apple.getY(),5,5);//画苹果
-		g.setColor(Color.WHITE);   
-		g.fillRect(snake.getX(),snake.getY(),5,5);//画蛇
+		
+		if(apple.live){
+			g.setColor(Color.GREEN);
+			g.fillRect(apple.getX(),apple.getY(),5,5);}//画苹果
+		if(snake.live){
+			g.setColor(Color.WHITE);   
+			g.fillRect(snake.getX(),snake.getY(),5,5);}//画蛇
+		eat();
 	}
 	
 	public void run() {
@@ -53,7 +57,10 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 		
 	}
 	public void eat(){
-		
+		if(apple.x==snake.x&&apple.y==snake.y){
+			apple.live=false;
+		}
+		this.repaint();
 	}
 
 }

@@ -3,7 +3,7 @@ package main;
 class Apple {
 	int x;
 	int y;
-	boolean live;
+	boolean live=true;
 			
 	Apple(int x,int y){
 		this.x=x;
