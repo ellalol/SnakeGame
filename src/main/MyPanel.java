@@ -13,6 +13,8 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 	MyPanel(){
 		snake=new Snake(100,100,1);
 		apple=new Apple(200,200);
+		Thread snakemove=new Thread(snake);
+		snakemove.start();
 	}
 	
 	public void paint(Graphics g){//具体的画的方法
@@ -39,15 +41,19 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode()==KeyEvent.VK_UP){
+			snake.direction=0;
 			snake.y-=10;
 		}
 		else if(e.getKeyCode()==KeyEvent.VK_DOWN){
+			snake.direction=1;
 			snake.y+=10;
 		}
 		else if(e.getKeyCode()==KeyEvent.VK_LEFT){
+			snake.direction=2;
 			snake.x-=10;
 		}
 		else if(e.getKeyCode()==KeyEvent.VK_RIGHT){
+			snake.direction=3;
 			snake.x+=10;
 		}
 		this.repaint();

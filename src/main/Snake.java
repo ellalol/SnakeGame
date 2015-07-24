@@ -13,7 +13,26 @@ class Snake implements Runnable{
 	}
 	
 	public void run() {
-		
+		while(true){
+			try{
+				Thread.sleep(50);
+			}catch(Exception e){	
+			}
+			switch(direction){
+			case 0:
+				y--;
+				break;
+			case 1:
+				y++;
+				break;
+			case 2:
+				x--;
+				break;
+			case 3:
+				x++;
+				break;
+			}
+		}
 	}
 	
 	public int getX() {
