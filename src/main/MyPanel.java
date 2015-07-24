@@ -8,13 +8,15 @@ import java.awt.event.KeyListener;
 import javax.swing.JPanel;
 
 class MyPanel extends JPanel implements KeyListener,Runnable{
+	Snake snake;
+	Apple apple;
 	MyPanel(){
-	
+		snake=new Snake(100,100,1);
+		apple=new Apple(200,200);
 	}
 	
 	public void paint(Graphics g){//具体的画的方法
-		Snake snake=new Snake(100,100,1);
-		Apple apple=new Apple(200,200);
+		
 		g.fillRect(0, 0, 500, 400);	//画背景
 		g.setColor(Color.GREEN);   
 		g.fillRect(apple.getX(),apple.getY(),5,5);//画苹果
@@ -33,20 +35,24 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode()==KeyEvent.VK_UP){
-			y--;
+			snake.y-=10;
 		}
-		if(e.getKeyCode()==KeyEvent.VK_DOWN){
-			y++;
+		else if(e.getKeyCode()==KeyEvent.VK_DOWN){
+			snake.y+=10;
 		}
-		if(e.getKeyCode()==KeyEvent.VK_LEFT){
-			x--;
+		else if(e.getKeyCode()==KeyEvent.VK_LEFT){
+			snake.x-=10;
 		}
-		if(e.getKeyCode()==KeyEvent.VK_RIGHT){
-			x++;
+		else if(e.getKeyCode()==KeyEvent.VK_RIGHT){
+			snake.x+=10;
 		}
+		this.repaint();
 	}
 
 	public void keyReleased(KeyEvent e) {
+		
+	}
+	public void eat(){
 		
 	}
 
