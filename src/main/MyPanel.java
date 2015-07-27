@@ -4,14 +4,17 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.LinkedList;
 
 import javax.swing.JPanel;
 
 class MyPanel extends JPanel implements KeyListener,Runnable{
 	Snake snake;
 	Apple apple;
+	LinkedList<Snake> wholesnake=new LinkedList<Snake>();//用一个LinkedList装蛇
 	MyPanel(){
 		snake=new Snake(100,100,1);
+		wholesnake.add(snake);//蛇头放进去
 		apple=new Apple(200,200);
 		Thread snakemove=new Thread(snake);
 		snakemove.start();
@@ -25,8 +28,10 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 			g.setColor(Color.GREEN);
 			g.fillRect(apple.getX(),apple.getY(),5,5);}//画苹果
 		if(snake.live){
-			g.setColor(Color.WHITE);   
-			g.fillRect(snake.getX(),snake.getY(),5,5);}//画蛇
+			for(int i=0;i<wholesnake.size();i++){
+				g.setColor(Color.WHITE);   
+				g.fillRect(wholesnake.get(i).getX(),wholesnake.get(i).getY(),5,5);}
+			}//画蛇
 		eat();
 	}
 	
@@ -42,19 +47,19 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode()==KeyEvent.VK_UP){
 			snake.direction=0;
-			snake.y-=10;
+			snake.y--;
 		}
 		else if(e.getKeyCode()==KeyEvent.VK_DOWN){
 			snake.direction=1;
-			snake.y+=10;
+			snake.y++;
 		}
 		else if(e.getKeyCode()==KeyEvent.VK_LEFT){
 			snake.direction=2;
-			snake.x-=10;
+			snake.x--;
 		}
 		else if(e.getKeyCode()==KeyEvent.VK_RIGHT){
 			snake.direction=3;
-			snake.x+=10;
+			snake.x++;
 		}
 		this.repaint();
 	}
@@ -65,8 +70,29 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 	public void eat(){
 		if(apple.x==snake.x&&apple.y==snake.y){
 			apple.live=false;
+			addsnake();
 		}
 		this.repaint();
 	}
-
+	public void addsnake(){//蛇变长
+		Snake newsnake;
+		switch(snake.direction){
+		case 0:
+			newsnake=new Snake(apple.getX(),apple.getY()+5,0);
+			wholesnake.add(newsnake);
+			break;
+		case 1:
+			newsnake=new Snake(apple.getX(),apple.getY()-5,1);
+			wholesnake.add(newsnake);
+			break;
+		case 2:
+			newsnake=new Snake(apple.getX()-5,apple.getY(),2);
+			wholesnake.add(newsnake);
+			break;
+		case 3:
+			newsnake=new Snake(apple.getX()+5,apple.getY(),3);
+			wholesnake.add(newsnake);
+			break;
+		}
+	}
 }
