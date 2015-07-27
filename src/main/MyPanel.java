@@ -80,18 +80,26 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 		case 0:
 			newsnake=new Snake(apple.getX(),apple.getY()+5,0);
 			wholesnake.add(newsnake);
+			Thread snakefollow=new Thread(newsnake);
+			snakefollow.start();
 			break;
 		case 1:
 			newsnake=new Snake(apple.getX(),apple.getY()-5,1);
 			wholesnake.add(newsnake);
+			Thread snakefollow1=new Thread(newsnake);
+			snakefollow1.start();
 			break;
 		case 2:
 			newsnake=new Snake(apple.getX()-5,apple.getY(),2);
 			wholesnake.add(newsnake);
+			Thread snakefollow2=new Thread(newsnake);
+			snakefollow2.start();
 			break;
 		case 3:
 			newsnake=new Snake(apple.getX()+5,apple.getY(),3);
 			wholesnake.add(newsnake);
+			Thread snakefollow3=new Thread(newsnake);
+			snakefollow3.start();
 			break;
 		}
 	}
