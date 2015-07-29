@@ -9,14 +9,15 @@ import java.util.LinkedList;
 import javax.swing.JPanel;
 
 class MyPanel extends JPanel implements KeyListener,Runnable{
-	Snake snake;
+	SnakeBody snakebody;
+	SnakePart snakehead;
 	Apple apple;
-	LinkedList<Snake> wholesnake=new LinkedList<Snake>();//用一个LinkedList装蛇
+	LinkedList<SnakePart> snake=new LinkedList<SnakePart>();//用一个LinkedList装蛇
 	MyPanel(){
-		snake=new Snake(100,100,1);
-		wholesnake.add(snake);//蛇头放进去
+		snakehead=new SnakePart(100,100,1);
+		snake.add(snakehead);//蛇头放进去
 		apple=new Apple(200,200);
-		Thread snakemove=new Thread(snake);
+		Thread snakemove=new Thread(snakebody);
 		snakemove.start();
 	}
 	
@@ -27,10 +28,10 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 		if(apple.live){
 			g.setColor(Color.GREEN);
 			g.fillRect(apple.getX(),apple.getY(),5,5);}//画苹果
-		if(snake.live){
-			for(int i=0;i<wholesnake.size();i++){
+		if(snakebody.live){
+			for(int i=0;i<snake.size();i++){
 				g.setColor(Color.WHITE);   
-				g.fillRect(wholesnake.get(i).getX(),wholesnake.get(i).getY(),5,5);}
+				g.fillRect(snake.get(i).getX(),snake.get(i).getY(),5,5);}
 			}//画蛇
 		eat();
 	}
@@ -46,20 +47,20 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode()==KeyEvent.VK_UP){
-			snake.direction=0;
-			snake.y--;
+			snakebody.direction=0;
+			snakebody.y--;
 		}
 		else if(e.getKeyCode()==KeyEvent.VK_DOWN){
-			snake.direction=1;
-			snake.y++;
+			snakebody.direction=1;
+			snakebody.y++;
 		}
 		else if(e.getKeyCode()==KeyEvent.VK_LEFT){
-			snake.direction=2;
-			snake.x--;
+			snakebody.direction=2;
+			snakebody.x--;
 		}
 		else if(e.getKeyCode()==KeyEvent.VK_RIGHT){
-			snake.direction=3;
-			snake.x++;
+			snakebody.direction=3;
+			snakebody.x++;
 		}
 		this.repaint();
 	}
@@ -68,38 +69,32 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 		
 	}
 	public void eat(){
-		if(apple.x==snake.x&&apple.y==snake.y){
+		if(apple.x==snakebody.x&&apple.y==snakebody.y){
 			apple.live=false;
 			addsnake();
 		}
+		Apple apple=new Apple((int)Math.random()*500,(int)Math.random()*400);
+		apple.live=true;//被吃掉新建一个苹果
 		this.repaint();
 	}
 	public void addsnake(){//蛇变长
-		Snake newsnake;
-		switch(snake.direction){
+		SnakePart snakeend;
+		switch(snakebody.direction){
 		case 0:
-			newsnake=new Snake(apple.getX(),apple.getY()+5,0);
-			wholesnake.add(newsnake);
-			Thread snakefollow=new Thread(newsnake);
-			snakefollow.start();
+			snakeend=new SnakePart(apple.getX(),apple.getY()+5,0);
+			snake.add(snakeend);
 			break;
 		case 1:
-			newsnake=new Snake(apple.getX(),apple.getY()-5,1);
-			wholesnake.add(newsnake);
-			Thread snakefollow1=new Thread(newsnake);
-			snakefollow1.start();
+			snakeend=new SnakePart(apple.getX(),apple.getY()-5,0);
+			snake.add(snakeend);
 			break;
 		case 2:
-			newsnake=new Snake(apple.getX()-5,apple.getY(),2);
-			wholesnake.add(newsnake);
-			Thread snakefollow2=new Thread(newsnake);
-			snakefollow2.start();
+			snakeend=new SnakePart(apple.getX()-5,apple.getY(),0);
+			snake.add(snakeend);
 			break;
 		case 3:
-			newsnake=new Snake(apple.getX()+5,apple.getY(),3);
-			wholesnake.add(newsnake);
-			Thread snakefollow3=new Thread(newsnake);
-			snakefollow3.start();
+			snakeend=new SnakePart(apple.getX()+5,apple.getY(),0);
+			snake.add(snakeend);
 			break;
 		}
 	}
