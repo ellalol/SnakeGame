@@ -4,21 +4,22 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import javax.swing.JPanel;
 
 class MyPanel extends JPanel implements KeyListener,Runnable{
-	SnakeBody snakebody;
 	SnakePart snakehead;
 	Apple apple;
-	LinkedList<SnakePart> snake=new LinkedList<SnakePart>();//用一个LinkedList装蛇
+	LinkedList<SnakePart> snake;
+	int direction;
 	MyPanel(){
 		snakehead=new SnakePart(100,100,1);
+		snake=new LinkedList<SnakePart>();
 		snake.add(snakehead);//蛇头放进去
 		apple=new Apple(200,200);
-		Thread snakemove=new Thread(snakebody);
-		snakemove.start();
+		direction = 0;
 	}
 	
 	public void paint(Graphics g){//具体的画的方法
@@ -28,7 +29,7 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 		if(apple.live){
 			g.setColor(Color.GREEN);
 			g.fillRect(apple.getX(),apple.getY(),5,5);}//画苹果
-		if(snakebody.live){
+		if(snakehead.live){
 			for(int i=0;i<snake.size();i++){
 				g.setColor(Color.WHITE);   
 				g.fillRect(snake.get(i).getX(),snake.get(i).getY(),5,5);}
@@ -37,9 +38,33 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 	}
 	
 	public void run() {
-		
-	}
-
+		while(true){ 
+			try{
+				Thread.sleep(50);
+			}
+			catch(Exception e){
+			}
+			for(int i=0;i<snake.size();i++){
+				SnakePart snakepart = null;
+				switch(direction) {
+				case 0:
+					snakepart=new SnakePart(snake.get(i).x,snake.get(i).y-1,direction);
+					break;
+				case 1:
+					snakepart=new SnakePart(snake.get(i).x,snake.get(i).y+1,direction);
+					break;
+				case 2:
+					snakepart=new SnakePart(snake.get(i).x-1,snake.get(i).y,direction);
+					break;
+				case 3:
+					snakepart=new SnakePart(snake.get(i).x+1,snake.get(i).y,direction);
+					break;
+				}
+				snake.addFirst(snakepart);//加头
+				snake.removeLast();//去尾
+			}repaint();
+	}		
+}
 	
 	public void keyTyped(KeyEvent e) {
 		
@@ -47,20 +72,16 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode()==KeyEvent.VK_UP){
-			snakebody.direction=0;
-			snakebody.y--;
+			direction=0;			
 		}
 		else if(e.getKeyCode()==KeyEvent.VK_DOWN){
-			snakebody.direction=1;
-			snakebody.y++;
+			direction=1;
 		}
 		else if(e.getKeyCode()==KeyEvent.VK_LEFT){
-			snakebody.direction=2;
-			snakebody.x--;
+			direction=2;
 		}
 		else if(e.getKeyCode()==KeyEvent.VK_RIGHT){
-			snakebody.direction=3;
-			snakebody.x++;
+			direction=3;
 		}
 		this.repaint();
 	}
@@ -69,32 +90,30 @@ class MyPanel extends JPanel implements KeyListener,Runnable{
 		
 	}
 	public void eat(){
-		if(apple.x==snakebody.x&&apple.y==snakebody.y){
+		if(apple.x==snake.getFirst().x&&apple.y==snake.getFirst().y&&apple.live){
 			apple.live=false;
 			addsnake();
 		}
-		Apple apple=new Apple((int)Math.random()*500,(int)Math.random()*400);
-		apple.live=true;//被吃掉新建一个苹果
 		this.repaint();
 	}
 	public void addsnake(){//蛇变长
-		SnakePart snakeend;
-		switch(snakebody.direction){
+		SnakePart snakepart;
+		switch(direction){
 		case 0:
-			snakeend=new SnakePart(apple.getX(),apple.getY()+5,0);
-			snake.add(snakeend);
+			snakepart=new SnakePart(snake.getLast().x,snake.getLast().y+5,direction);
+			snake.addLast(snakepart);
 			break;
 		case 1:
-			snakeend=new SnakePart(apple.getX(),apple.getY()-5,0);
-			snake.add(snakeend);
+			snakepart=new SnakePart(snake.getLast().x,snake.getLast().y-5,direction);
+			snake.addLast(snakepart);
 			break;
 		case 2:
-			snakeend=new SnakePart(apple.getX()-5,apple.getY(),0);
-			snake.add(snakeend);
+			snakepart=new SnakePart(snake.getLast().x+5,snake.getLast().y,direction);
+			snake.addLast(snakepart);
 			break;
 		case 3:
-			snakeend=new SnakePart(apple.getX()+5,apple.getY(),0);
-			snake.add(snakeend);
+			snakepart=new SnakePart(snake.getLast().x-5,snake.getLast().y,direction);
+			snake.addLast(snakepart);
 			break;
 		}
 	}

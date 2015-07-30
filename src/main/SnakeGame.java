@@ -11,6 +11,8 @@ public class SnakeGame extends JFrame{
 		this.setLocation(300,300);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
+		Thread move=new Thread(mb);
+		move.start();
 	}
 	public static void main(String[] args){
 		SnakeGame sg=new SnakeGame();//新建对象的同时 调用了SnakeGame()构造函数
